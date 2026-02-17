@@ -1,6 +1,6 @@
-export const APP_META_TITLE = 'astro Storefront';
+export const APP_META_TITLE = 'Rakshalokam Storefront';
 export const APP_META_DESCRIPTION =
-  'Astro spiritual storefront built with Remix and Vendure.';
+  'Rakshalokam spiritual storefront built with Remix and Vendure.';
 export const LOCAL_API_URL = 'http://localhost:3000/shop-api';
 export const DEMO_API_URL = 'https://readonlydemo.vendure.io/shop-api';
 export let API_URL =

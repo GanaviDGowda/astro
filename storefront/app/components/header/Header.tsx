@@ -34,7 +34,7 @@ export function Header({
           to="/"
           className="text-2xl sm:text-3xl tracking-wide font-semibold text-brand lowercase"
         >
-          astro
+          <img src="/logo.svg" alt="Rakshalokam Logo" className="h-10 w-auto" />
         </Link>
         <div className="flex items-center gap-2 sm:gap-3 text-brand">
           <Link

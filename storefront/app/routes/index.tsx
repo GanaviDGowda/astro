@@ -169,7 +169,7 @@ export default function Index() {
         {heroImage ? (
           <img
             src={`${heroImage}?w=1900&h=900`}
-            alt="Astro Hero"
+            alt="Rakshalokam Hero"
             className="absolute right-0 top-0 h-full w-[58%] object-cover opacity-20 mix-blend-multiply"
           />
         ) : null}
@@ -196,8 +196,8 @@ export default function Index() {
               <p className="text-sm uppercase tracking-[0.18em] text-primary-700 font-semibold">
                 Timeless Energy Pieces
               </p>
-              <h1 className="mt-4 text-5xl md:text-7xl font-serif tracking-wide">
-                ASTRO x TRILOK
+              <h1 className="mt-4 text-5xl md:text-7xl tracking-wide">
+                RAKSHALOKAM
               </h1>
               <p className="mt-4 text-lg md:text-2xl text-zinc-700 max-w-2xl mx-auto">
                 Clean, intentional pieces designed with traditional meaning and
