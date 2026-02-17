@@ -7,6 +7,7 @@ import {
   ShieldCheckIcon,
   SparklesIcon,
 } from '@heroicons/react/24/outline';
+import { StarIcon } from '@heroicons/react/20/solid';
 import { CollectionsQuery } from '~/generated/graphql';
 import { getCollections } from '~/providers/collections/collections';
 
@@ -97,13 +98,11 @@ function ProductCard({
   product: ProductLike;
   height?: string;
 }) {
-  const stars = product.rating === 5 ? '*****' : '****';
-
   return (
     <Link
       to={`/collections/${product.slug}`}
       prefetch="intent"
-      className="block group rounded-xl border border-primary-100 bg-white overflow-hidden transition-colors hover:border-primary-300"
+      className="group flex h-full flex-col rounded-xl border border-primary-100 bg-white overflow-hidden transition-colors hover:border-primary-300"
     >
       <div className="relative overflow-hidden bg-primary-50">
         {product.image ? (
@@ -133,19 +132,36 @@ function ProductCard({
         ) : null}
       </div>
 
-      <h3 className="mt-4 px-4 text-[18px] leading-[1.35] font-semibold text-brand">
-        {product.name}
-      </h3>
-      <p className="mt-1 px-4 text-primary-600 text-sm leading-none">
-        {stars}
-        <span className="ml-2 text-brand text-sm">({product.reviews})</span>
-      </p>
-      <p className="mt-2 px-4 pb-4 text-brand text-3xl leading-none font-bold">
-        Rs {product.price}
-        <span className="ml-2 text-zinc-500 text-sm line-through font-normal">
-          Rs {product.oldPrice}
-        </span>
-      </p>
+      <div className="flex flex-1 flex-col">
+        <h3 className="mt-4 px-4 text-[18px] leading-[1.35] font-semibold text-brand line-clamp-2">
+          {product.name}
+        </h3>
+        <p className="mt-2 px-4 flex items-center gap-2 text-sm leading-none">
+          <span
+            className="flex items-center gap-1"
+            aria-label={`${product.rating} out of 5 stars`}
+          >
+            {[0, 1, 2, 3, 4].map((star) => (
+              <StarIcon
+                key={star}
+                className={`h-3.5 w-3.5 ${
+                  star < product.rating ? 'text-amber-500' : 'text-zinc-300'
+                }`}
+              />
+            ))}
+          </span>
+          <span className="text-zinc-700 text-xs font-medium">
+            {product.rating.toFixed(1)}
+          </span>
+          <span className="text-brand text-sm">({product.reviews})</span>
+        </p>
+        <p className="px-4 pb-4 pt-2 text-brand text-3xl leading-none font-bold">
+          Rs {product.price}
+          <span className="ml-2 text-zinc-500 text-sm line-through font-normal">
+            Rs {product.oldPrice}
+          </span>
+        </p>
+      </div>
     </Link>
   );
 }
@@ -327,26 +343,26 @@ export default function Index() {
 
       <section className="max-w-[1280px] mx-auto px-6 py-8">
         <SectionHeader title="Single Rudraksha Beads" viewAll />
-        <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_3fr] gap-8">
-          <div className="bg-white border border-primary-100 rounded-xl overflow-hidden">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:grid-rows-2">
+          <div className="bg-white border border-primary-100 rounded-xl overflow-hidden flex flex-col lg:row-span-2">
             {collections[1]?.featuredAsset?.preview ? (
               <img
                 src={`${collections[1]?.featuredAsset?.preview}?w=860&h=950`}
                 alt="Original Nepali Rudraksha"
-                className="h-[420px] w-full object-cover"
+                className="h-[500px] lg:h-full w-full object-cover"
               />
             ) : null}
-            <div className="bg-primary-600 text-white p-6">
-              <h3 className="text-3xl leading-none font-semibold">
+            <div className="bg-primary-600 text-white p-5 lg:p-6">
+              <h3 className="text-2xl lg:text-3xl leading-none font-semibold">
                 Original Nepali Rudraksha
               </h3>
-              <p className="mt-3 text-xl leading-none">
+              <p className="mt-2 text-lg lg:text-xl leading-tight">
                 1 Mukhi to 11 Mukhi - with certificate
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:col-span-2 lg:row-span-2">
             {rudraksha.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
