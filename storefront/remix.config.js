@@ -34,6 +34,7 @@ const cloudflarePagesConfig = {
 const netlifyConfig = {
   serverBuildTarget: 'netlify',
   server: './server-netlify.js',
+  serverBuildPath: 'netlify/functions/server.js',
   ignoredRouteFiles: ['**/.*'],
   ...commonConfig,
 };
