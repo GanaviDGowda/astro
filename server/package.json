@@ -8,6 +8,7 @@
   "scripts": {
     "dev:server": "ts-node ./src/index.ts",
     "dev:worker": "ts-node ./src/index-worker.ts",
+    "populate": "ts-node ./src/populate.ts",
     "dev:dashboard": "vite --clearScreen false",
     "dev": "concurrently --kill-others-on-fail npm:dev:*",
     "build": "tsc",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@vendure/cli": "3.5.3",
+    "@vendure/create": "^3.5.3",
     "concurrently": "9.2.1",
     "typescript": "5.8.2"
   }

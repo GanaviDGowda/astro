@@ -10,14 +10,16 @@ An e-commerce storefront for [Vendure](https://www.vendure.io) built with [Remix
 ## To do
 
 Most Vendure features are already part of this starter. Notable missing Vendure features:
+
 - Default billing/shipping addresses
-   - This is part of the account page (https://github.com/vendure-ecommerce/storefront-remix-starter/pull/39) but not yet used in checkout
+- This is part of the account page (<https://github.com/vendure-ecommerce/storefront-remix-starter/pull/39>) but not yet used in checkout
 - Separate billing address in checkout
 - Promotions
 - Localization
 - Multi channel support
 
 General things missing:
+
 - Global input validation
 - Sitemap generation
 - Metadata
@@ -29,17 +31,17 @@ General things missing:
 1. Clone this repo
 2. `yarn install`
 3. Create a `.env` file in the root dir with the following command and update it with your variables:
-   
+
    ```bash
    cp .env.template .env
    ```
-   
-5. `yarn dev` - run the storefront with a local Remix server
-6. `yarn dev:cf` - runs locally with the Cloudflare Pages configuration
+
+4. `yarn dev` - run the storefront with a local Remix server
+5. `yarn dev:cf` - runs locally with the Cloudflare Pages configuration
 
 ### Vendure Server
 
-This storefront requires a Vendure V2 server. You can either run a local instance, or use our public demo server.  
+This storefront requires a Vendure V2 server. You can either run a local instance, or use our public demo server.
 If you're looking for V1 support, [75eb880](https://github.com/vendure-ecommerce/storefront-remix-starter/tree/75eb880052d7f76b2026fc917cf545996012e3ac) is the last supported commit.
 
 #### Code Generation
@@ -78,7 +80,7 @@ to load the Stripe payment element.
 
 Then add your Stripe publishable key to the env file:
 
-```
+```plaintext
 STRIPE_PUBLISHABLE_KEY=pk_test_...
 ```
 

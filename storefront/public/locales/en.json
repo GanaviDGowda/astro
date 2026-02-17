@@ -193,7 +193,9 @@
     "shippingCostsInfo": "Shipping costs depend on delivery address and will be calculated during checkout.",
     "returnsInfo": "Returns are subject to terms. Please see the RETURNS PAGE for further information.",
     "recentReviews": "Recent reviews",
-    "recentRating": "out of 5 stars"
+    "recentRating": "out of 5 stars",
+    "totalReviews": "reviews",
+    "noReviewsYet": "No reviews yet"
   },
   "footer": {
     "title": "Footer",

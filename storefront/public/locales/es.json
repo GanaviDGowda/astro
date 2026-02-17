@@ -193,7 +193,9 @@
     "shippingCostsInfo": "Los costos de envío dependen de la dirección de entrega y se calcularán durante el pago.",
     "returnsInfo": "Las devoluciones están sujetas a términos. ",
     "recentReviews": "Reseñas recientes",
-    "recentRating": "de 5 estrellas"
+    "recentRating": "de 5 estrellas",
+    "totalReviews": "reseñas",
+    "noReviewsYet": "Aún no hay reseñas"
   },
   "footer": {
     "title": "Pie de página",

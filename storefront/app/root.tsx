@@ -95,7 +95,8 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
     // submitted payment for order
     return true;
   }
-  return false;
+  // Keep global UI data (e.g. collection nav) fresh across route changes.
+  return nextUrl.pathname !== currentUrl.pathname;
 };
 
 export type RootLoaderData = {

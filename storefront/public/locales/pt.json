@@ -193,7 +193,9 @@
     "shippingCostsInfo": "Os custos de envio dependem do endereço de entrega e serão calculados durante a finalização da compra.",
     "returnsInfo": "As devoluções estão sujeitas a termos. ",
     "recentReviews": "Avaliações recentes",
-    "recentRating": "de 5 estrelas"
+    "recentRating": "de 5 estrelas",
+    "totalReviews": "avaliações",
+    "noReviewsYet": "Ainda não há avaliações"
   },
   "footer": {
     "title": "Rodapé",

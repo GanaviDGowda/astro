@@ -1,22 +1,20 @@
 import React from 'react';
+import clsx, { ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
-export function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(...inputs));
 }
+
+// Backwards compatible alias for existing usages.
+export const classNames = cn;
 
 export function mergeClassName(
   props: React.HTMLAttributes<any>,
-  className: string,
+  className: ClassValue,
 ) {
-  if (props.className !== undefined) {
-    return {
-      ...props,
-      className: `${props.className} ${className}`,
-    };
-  }
-
   return {
     ...props,
-    className: className,
+    className: cn(props.className, className),
   };
 }
