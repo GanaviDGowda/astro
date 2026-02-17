@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "ignoreDeprecations": "6.0",
     "forceConsistentCasingInFileNames": true,
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
@@ -15,8 +14,7 @@
     "sourceMap": false,
     "skipLibCheck": true,
     "outDir": "./dist",
-    "rootDir": "./src",
-    "baseUrl": "./"
+    "rootDir": "./src"
   },
   "include": ["src/**/*.ts"],
   "exclude": [
