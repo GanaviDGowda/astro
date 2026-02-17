@@ -1,0 +1,74 @@
+@tailwind base;
+/* @tailwind components; */
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --surface: #fffdfb;
+    --surface-muted: #fff4ea;
+    --ink: #2f241f;
+    --accent: #f7791d;
+  }
+
+  html {
+    font-family: 'Quattrocento', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+    color: var(--ink);
+  }
+
+  body {
+    background: var(--surface);
+    color: var(--ink);
+  }
+
+  ::selection {
+    background: #ffd1ad;
+    color: #783713;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+@layer utilities {
+  .flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .shadow-divider {
+    box-shadow: rgba(184, 78, 15, 0.15) 0px 10px 9px -10px inset;
+  }
+
+  .mirror-x {
+    --tw-scale-x: -1;
+  }
+
+  .text-inherit {
+    color: inherit;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hero-pack-card {
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff9f4;
+    border: 1px solid #ffd1ad;
+    box-shadow: 0 8px 18px rgba(184, 78, 15, 0.1);
+    transition: transform 180ms ease;
+  }
+
+  .hero-pack-card:hover {
+    transform: translateY(-2px);
+  }
+}

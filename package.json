@@ -1,0 +1,32 @@
+{
+  "name": "astro-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "install:server": "npm install --prefix server",
+    "install:storefront": "npm install --prefix storefront",
+    "install:all": "npm run install:server && npm run install:storefront",
+    "dev:server": "npm run dev --prefix server",
+    "dev:storefront": "npm run dev --prefix storefront",
+    "dev": "concurrently --kill-others-on-fail \"npm run dev:server\" \"npm run dev:storefront\"",
+    "build:server": "npm run build --prefix server",
+    "build:storefront": "npm run build --prefix storefront",
+    "build": "concurrently \"npm run build:server\" \"npm run build:storefront\"",
+    "lint:server": "npm exec --prefix server tsc --noEmit",
+    "lint:storefront": "npm exec --prefix storefront tsc --noEmit",
+    "lint": "concurrently \"npm run lint:server\" \"npm run lint:storefront\"",
+    "start:server": "npm run start --prefix server",
+    "start:storefront": "npm run start --prefix storefront",
+    "start": "concurrently \"npm run start:server\" \"npm run start:storefront\"",
+    "docker:pull": "docker compose -f server/docker-compose.yml pull"
+  },
+  "devDependencies": {
+    "@remix-run/eslint-config": "^2.17.4",
+    "concurrently": "^9.2.1",
+    "eslint": "^8.57.1"
+  },
+  "dependencies": {
+    "server": "^1.0.42",
+    "storefront": "^0.8.1"
+  }
+}
