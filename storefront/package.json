@@ -14,7 +14,7 @@
     "start:cf": "cross-env NODE_ENV=production yarn run dev:wrangler",
     "start": "remix-serve build",
     "generate": "graphql-codegen --config codegen.yml",
-    "prepare": "husky install",
+    "prepare": "node -e \"const fs=require('fs'); if (fs.existsSync('.git')) { require('child_process').execSync('husky install', { stdio: 'inherit' }); }\"",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint ."
   },
   "dependencies": {
