@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 /**
  * @type {import('@remix-run/dev').AppConfig}
  */

@@ -1,6 +1,5 @@
 import { Link } from '@remix-run/react';
 import {
-  MagnifyingGlassIcon,
   ShoppingBagIcon,
 } from '@heroicons/react/24/outline';
 import { useRootLoader } from '~/utils/use-root-loader';
@@ -8,6 +7,7 @@ import { BoltIcon, UserIcon } from '@heroicons/react/24/solid';
 import { useScrollingUp } from '~/utils/use-scrolling-up';
 import { classNames } from '~/utils/class-names';
 import { useTranslation } from 'react-i18next';
+import { SearchBar } from './SearchBar';
 
 export function Header({
   onCartIconClick,
@@ -48,14 +48,10 @@ export function Header({
             ))}
           </ul>
         </nav>
-        <div className="flex items-center gap-1.5 sm:gap-2 text-brand">
-          <Link
-            to="/search"
-            aria-label="Search products"
-            className="p-2 rounded-full hover:bg-primary-50 transition-colors duration-200"
-          >
-            <MagnifyingGlassIcon className="h-5 w-5" />
-          </Link>
+        <div className="flex items-center gap-2 text-brand">
+          <div className="flex-1 sm:flex-none sm:w-44 md:w-56 lg:w-64">
+            <SearchBar />
+          </div>
           <Link
             to={isSignedIn ? '/account' : '/sign-in'}
             aria-label={

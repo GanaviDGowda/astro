@@ -70,6 +70,7 @@ import { useTranslation } from 'react-i18next';
 import { CurrencyCode } from '~/generated/graphql';
 import { getI18NextServer } from '~/i18next.server';
 import { themeColors } from '~/theme/tokens';
+import { GurujiChatPopup } from '~/components/chat/GurujiChatPopup';
 
 export const meta: MetaFunction = () => {
   return [{ title: APP_META_TITLE }, { description: APP_META_DESCRIPTION }];
@@ -106,11 +107,37 @@ export type RootLoaderData = {
   activeChannel: Awaited<ReturnType<typeof activeChannel>>;
   collections: Awaited<ReturnType<typeof getCollections>>;
   locale: string;
+  whatsappNumber: string | null;
 };
 
 import { getActiveOrder } from '~/providers/orders/order';
 
+async function resolveWhatsappNumber() {
+  const envValue = process.env.WHATSAPP_NUMBER ?? null;
+  let whatsappNumber = envValue;
+  if (!whatsappNumber && typeof process !== 'undefined' && process.versions?.node) {
+    try {
+      const fs = await import('node:fs');
+      const path = await import('node:path');
+      const cwdEnvPath = path.resolve(process.cwd(), '.env');
+      const altEnvPath = path.resolve(process.cwd(), 'storefront', '.env');
+      const envPath = fs.existsSync(cwdEnvPath) ? cwdEnvPath : altEnvPath;
+      if (fs.existsSync(envPath)) {
+        const contents = fs.readFileSync(envPath, 'utf8');
+        const match = contents.match(/^\s*WHATSAPP_NUMBER\s*=\s*(.*)\s*$/m);
+        if (match?.[1]) {
+          whatsappNumber = match[1].trim().replace(/^['"]|['"]$/g, '');
+        }
+      }
+    } catch {
+      // Ignore file system errors; env may be provided by the host.
+    }
+  }
+  return whatsappNumber?.replace(/\D/g, '') ?? null;
+}
+
 export async function loader({ request, params, context }: DataFunctionArgs) {
+  const sanitizedWhatsappNumber = await resolveWhatsappNumber();
   try {
     const activeOrder = await getActiveOrder({ request });
     const collections = await getCollections(request, { take: 20 });
@@ -127,6 +154,7 @@ export async function loader({ request, params, context }: DataFunctionArgs) {
       activeChannel: await activeChannel({ request }),
       collections: topLevelCollections,
       locale,
+      whatsappNumber: sanitizedWhatsappNumber,
     };
 
     return data(loaderData, { headers: activeCustomer._headers });
@@ -142,6 +170,7 @@ export async function loader({ request, params, context }: DataFunctionArgs) {
       },
       collections: [],
       locale: 'en',
+      whatsappNumber: sanitizedWhatsappNumber,
     };
     return data(fallbackData);
   }
@@ -203,6 +232,7 @@ export default function App() {
           adjustOrderLine={adjustOrderLine}
           removeItem={removeItem}
         />
+        <GurujiChatPopup whatsappNumber={loaderData.whatsappNumber} />
         <ScrollRestoration />
         <Scripts />
         <Footer collections={collections}></Footer>
