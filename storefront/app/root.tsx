@@ -71,6 +71,7 @@ import { CurrencyCode } from '~/generated/graphql';
 import { getI18NextServer } from '~/i18next.server';
 import { themeColors } from '~/theme/tokens';
 import { GurujiChatPopup } from '~/components/chat/GurujiChatPopup';
+import { resolveWhatsappNumber } from '~/utils/whatsapp-number.server';
 
 export const meta: MetaFunction = () => {
   return [{ title: APP_META_TITLE }, { description: APP_META_DESCRIPTION }];
@@ -112,32 +113,8 @@ export type RootLoaderData = {
 
 import { getActiveOrder } from '~/providers/orders/order';
 
-async function resolveWhatsappNumber() {
-  const envValue = process.env.WHATSAPP_NUMBER ?? null;
-  let whatsappNumber = envValue;
-  if (!whatsappNumber && typeof process !== 'undefined' && process.versions?.node) {
-    try {
-      const fs = await import('node:fs');
-      const path = await import('node:path');
-      const cwdEnvPath = path.resolve(process.cwd(), '.env');
-      const altEnvPath = path.resolve(process.cwd(), 'storefront', '.env');
-      const envPath = fs.existsSync(cwdEnvPath) ? cwdEnvPath : altEnvPath;
-      if (fs.existsSync(envPath)) {
-        const contents = fs.readFileSync(envPath, 'utf8');
-        const match = contents.match(/^\s*WHATSAPP_NUMBER\s*=\s*(.*)\s*$/m);
-        if (match?.[1]) {
-          whatsappNumber = match[1].trim().replace(/^['"]|['"]$/g, '');
-        }
-      }
-    } catch {
-      // Ignore file system errors; env may be provided by the host.
-    }
-  }
-  return whatsappNumber?.replace(/\D/g, '') ?? null;
-}
-
 export async function loader({ request, params, context }: DataFunctionArgs) {
-  const sanitizedWhatsappNumber = await resolveWhatsappNumber();
+  const sanitizedWhatsappNumber = resolveWhatsappNumber();
   try {
     const activeOrder = await getActiveOrder({ request });
     const collections = await getCollections(request, { take: 20 });

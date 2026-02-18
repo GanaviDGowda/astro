@@ -80,8 +80,18 @@ export function requester<R, V>(
   vars?: V,
   options?: { headers?: Headers; request?: Request },
 ): Promise<R & { _headers: Headers }> {
+  const sourceQuery = (doc as any)?.loc?.source?.body;
+  const printedQuery = print(doc);
+  const query =
+    typeof sourceQuery === 'string' && sourceQuery.trim().length > 0
+      ? sourceQuery
+      : printedQuery;
+  if (!query || query.trim().length === 0) {
+    throw new Error('Empty GraphQL document.');
+  }
+
   return sendQuery<R, V>({
-    query: print(doc),
+    query,
     variables: vars,
     ...options,
   }).then(async (response) => {
