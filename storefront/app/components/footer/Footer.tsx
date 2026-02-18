@@ -26,7 +26,7 @@ export default function Footer({
 
   return (
     <footer
-      className="mt-16 border-t border-primary-100 bg-[#fffdfb]"
+      className="mt-16 border-t border-primary-100 bg-surface"
       aria-labelledby="footer-heading"
     >
       <h2 id="footer-heading" className="sr-only">

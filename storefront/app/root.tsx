@@ -69,6 +69,7 @@ import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
 import { CurrencyCode } from '~/generated/graphql';
 import { getI18NextServer } from '~/i18next.server';
+import { themeColors } from '~/theme/tokens';
 
 export const meta: MetaFunction = () => {
   return [{ title: APP_META_TITLE }, { description: APP_META_DESCRIPTION }];
@@ -174,7 +175,7 @@ export default function App() {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content={themeColors.metaTheme} />
         <Meta />
         <Links />
       </head>
@@ -234,7 +235,7 @@ function DefaultSparseErrorPage({
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content={themeColors.metaTheme} />
         <Meta />
         <Links />
       </head>

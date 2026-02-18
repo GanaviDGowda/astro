@@ -75,7 +75,7 @@ type SdkWithHeaders = {
 
 export const sdk: SdkWithHeaders = baseSdk as any;
 
-function requester<R, V>(
+export function requester<R, V>(
   doc: DocumentNode,
   vars?: V,
   options?: { headers?: Headers; request?: Request },

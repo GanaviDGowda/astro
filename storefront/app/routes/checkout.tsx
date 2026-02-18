@@ -28,7 +28,7 @@ export default function Checkout() {
   let isConfirmationPage = state === 'confirmation';
 
   return (
-    <div className="bg-[radial-gradient(circle_at_top,_#fffdfb,_#f5f7fb_45%,_#eef2f7_100%)]">
+    <div className="bg-checkout-radial">
       <div
         className={classNames(
           isConfirmationPage ? 'lg:max-w-3xl mx-auto' : 'lg:max-w-7xl',

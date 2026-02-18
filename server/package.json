@@ -10,7 +10,7 @@
     "dev:worker": "ts-node ./src/index-worker.ts",
     "populate": "ts-node ./src/populate.ts",
     "dev:dashboard": "vite --clearScreen false",
-    "dev": "concurrently --kill-others-on-fail npm:dev:*",
+    "dev": "concurrently --kill-others --kill-signal SIGINT npm:dev:*",
     "build": "tsc",
     "build:dashboard": "vite build",
     "start:server": "node ./dist/index.js",

@@ -4,10 +4,11 @@
 
 @layer base {
   :root {
-    --surface: #fffdfb;
-    --surface-muted: #fff4ea;
-    --ink: #2f241f;
-    --accent: #f7791d;
+    --surface: theme('colors.surface');
+    --surface-muted: theme('colors.surface-muted');
+    --ink: theme('colors.ink');
+    --accent: theme('colors.accent');
+    --selection: theme('colors.selection');
   }
 
   html {
@@ -24,8 +25,8 @@
   }
 
   ::selection {
-    background: #ffd1ad;
-    color: #783713;
+    background: var(--selection);
+    color: var(--accent);
   }
 
   button:disabled {
@@ -40,7 +41,7 @@
     align-items: center;
   }
   .shadow-divider {
-    box-shadow: rgba(184, 78, 15, 0.15) 0px 10px 9px -10px inset;
+    box-shadow: theme('boxShadow.divider');
   }
 
   .mirror-x {
@@ -60,11 +61,7 @@
   }
 
   .hero-pack-card {
-    border-radius: 14px;
-    overflow: hidden;
-    background: #fff9f4;
-    border: 1px solid #ffd1ad;
-    box-shadow: 0 8px 18px rgba(184, 78, 15, 0.1);
+    @apply rounded-hero-pack overflow-hidden bg-hero-pack border border-hero-pack-border shadow-hero-pack;
     transition: transform 180ms ease;
   }
 

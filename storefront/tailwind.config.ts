@@ -1,34 +1,57 @@
-import colors from 'tailwindcss/colors';
+import defaultTheme from 'tailwindcss/defaultTheme';
 import type { Config } from 'tailwindcss';
-import forms from '@tailwindcss/forms';
+import {
+  themeColors,
+  themeGradients,
+  themePalette,
+  themeShadows,
+} from './app/theme/tokens';
 
 export default {
   content: ['./app/**/*.{js,ts,jsx,tsx}'],
-  plugins: [forms],
+  plugins: [require('@tailwindcss/forms')],
+  important: '#app',
 
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Quattrocento', 'sans-serif'],
+        sans: ['"Cormorant Garamond"', ...defaultTheme.fontFamily.sans],
+        serif: ['Cinzel', ...defaultTheme.fontFamily.serif],
+        display: ['"Yatra One"', ...defaultTheme.fontFamily.serif],
       },
       colors: {
-        primary: {
-          50: '#fff6ef',
-          100: '#ffe9d6',
-          200: '#ffd1ad',
-          300: '#ffb274',
-          400: '#ff9543',
-          500: '#f7791d',
-          600: '#df6510',
-          700: '#b84e0f',
-          800: '#943f12',
-          900: '#783713',
-        },
-        secondary: colors.emerald,
-        brand: '#2f241f',
+        brand: themeColors.ink,
+        surface: themeColors.surface,
+        'surface-muted': themeColors.surfaceMuted,
+        'surface-soft': themeColors.surfaceSoft,
+        'surface-cool': themeColors.surfaceCool,
+        'surface-cool-deep': themeColors.surfaceCoolDeep,
+        ink: themeColors.ink,
+        accent: themeColors.accent,
+        selection: themeColors.selection,
+        'hero-pack': themeColors.surfaceSoft,
+        'hero-pack-border': themeColors.heroPackBorder,
+        'razorpay-theme': themeColors.razorpayTheme,
+        primary: themePalette.primary,
+        secondary: themePalette.secondary,
+        saffron: themePalette.saffron,
+        sandalwood: themePalette.sandalwood,
+        'temple-brown': themePalette.templeBrown,
+      },
+      backgroundImage: {
+        'checkout-radial': themeGradients.checkoutRadial,
+        'hero-spotlight': themeGradients.heroSpotlight,
+      },
+      boxShadow: {
+        divider: themeShadows.divider,
+        'hero-pack': themeShadows.heroPack,
+      },
+      borderRadius: {
+        'hero-pack': '14px',
       },
       animation: {
         dropIn: 'dropIn 0.2s ease-out',
+        'spin-slow': 'spin 60s linear infinite',
       },
       keyframes: {
         dropIn: {

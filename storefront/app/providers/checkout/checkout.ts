@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
-import { QueryOptions, sdk } from '../../graphqlWrapper';
-import { PaymentInput } from '~/generated/graphql';
+import { QueryOptions, requester, sdk } from '../../graphqlWrapper';
+import { ErrorCode, PaymentInput } from '~/generated/graphql';
 
 export function getAvailableCountries(options: QueryOptions) {
   return sdk.availableCountries({}, options);
@@ -18,8 +18,41 @@ export function generateBraintreeClientToken(options: QueryOptions) {
   return sdk.generateBraintreeClientToken({}, options);
 }
 
-export function createStripePaymentIntent(options: QueryOptions) {
-  return sdk.createStripePaymentIntent({}, options);
+type RazorpayOrderIdSuccess = {
+  __typename: 'RazorpayOrderIdSuccess';
+  razorpayOrderId: string;
+};
+
+type RazorpayOrderIdGenerationError = {
+  __typename: 'RazorpayOrderIdGenerationError';
+  errorCode: ErrorCode;
+  message: string;
+};
+
+type GenerateRazorpayOrderIdResult =
+  | RazorpayOrderIdSuccess
+  | RazorpayOrderIdGenerationError;
+
+type GenerateRazorpayOrderIdMutation = {
+  generateRazorpayOrderId: GenerateRazorpayOrderIdResult;
+};
+
+type GenerateRazorpayOrderIdMutationVariables = {
+  orderId: string;
+};
+
+export function generateRazorpayOrderId(
+  orderId: string,
+  options: QueryOptions,
+) {
+  return requester<
+    GenerateRazorpayOrderIdMutation,
+    GenerateRazorpayOrderIdMutationVariables
+  >(
+    GenerateRazorpayOrderIdDocument,
+    { orderId },
+    { request: options.request },
+  );
 }
 
 export function getNextOrderStates(options: QueryOptions) {
@@ -101,13 +134,22 @@ gql`
 `;
 
 gql`
-  mutation createStripePaymentIntent {
-    createStripePaymentIntent
+  query generateBraintreeClientToken {
+    generateBraintreeClientToken
   }
 `;
 
-gql`
-  query generateBraintreeClientToken {
-    generateBraintreeClientToken
+const GenerateRazorpayOrderIdDocument = gql`
+  mutation generateRazorpayOrderId($orderId: ID!) {
+    generateRazorpayOrderId(orderId: $orderId) {
+      __typename
+      ... on RazorpayOrderIdSuccess {
+        razorpayOrderId
+      }
+      ... on RazorpayOrderIdGenerationError {
+        errorCode
+        message
+      }
+    }
   }
 `;

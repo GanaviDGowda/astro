@@ -1,7 +1,7 @@
 import { DataFunctionArgs, json, redirect } from '@remix-run/server-runtime';
 import {
   addPaymentToOrder,
-  createStripePaymentIntent,
+  generateRazorpayOrderId,
   generateBraintreeClientToken,
   getEligiblePaymentMethods,
   getNextOrderStates,
@@ -10,7 +10,7 @@ import {
 import { useLoaderData, useOutletContext } from '@remix-run/react';
 import { OutletContext } from '~/types';
 import { CurrencyCode, ErrorCode, ErrorResult } from '~/generated/graphql';
-import { StripePayments } from '~/components/checkout/stripe/StripePayments';
+import { RazorpayPayments } from '~/components/checkout/razorpay/RazorpayPayments';
 import { DummyPayments } from '~/components/checkout/DummyPayments';
 import { BraintreeDropIn } from '~/components/checkout/braintree/BraintreePayments';
 import { getActiveOrder } from '~/providers/orders/order';
@@ -37,19 +37,48 @@ export async function loader({ params, request }: DataFunctionArgs) {
     request,
   });
   const error = session.get('activeOrderError');
-  let stripePaymentIntent: string | undefined;
-  let stripePublishableKey: string | undefined;
-  let stripeError: string | undefined;
-  if (eligiblePaymentMethods.find((method) => method.code.includes('stripe'))) {
+  let razorpayOrderId: string | undefined;
+  let razorpayKeyId: string | undefined;
+  let razorpayError: string | undefined;
+  if (eligiblePaymentMethods.find((method) => method.code.includes('razorpay'))) {
     try {
-      const stripePaymentIntentResult = await createStripePaymentIntent({
+      const { nextOrderStates } = await getNextOrderStates({
         request,
       });
-      stripePaymentIntent =
-        stripePaymentIntentResult.createStripePaymentIntent ?? undefined;
-      stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY;
+      if (nextOrderStates.includes('ArrangingPayment')) {
+        const transitionResult = await transitionOrderToState(
+          'ArrangingPayment',
+          { request },
+        );
+        if (transitionResult.transitionOrderToState?.__typename !== 'Order') {
+          throw new Error(
+            transitionResult.transitionOrderToState?.message ??
+              'Unable to transition order to ArrangingPayment',
+          );
+        }
+      }
+
+      if (!activeOrder?.id) {
+        throw new Error('No active order found');
+      }
+
+      const razorpayOrderIdResult = await generateRazorpayOrderId(
+        activeOrder.id,
+        { request },
+      );
+      const result = razorpayOrderIdResult.generateRazorpayOrderId;
+      if (result.__typename === 'RazorpayOrderIdSuccess') {
+        razorpayOrderId = result.razorpayOrderId;
+      } else {
+        razorpayError = result.message;
+      }
+
+      razorpayKeyId = process.env.RAZORPAY_KEY_ID;
+      if (!razorpayKeyId) {
+        razorpayError = 'RAZORPAY_KEY_ID is not set';
+      }
     } catch (e: any) {
-      stripeError = e.message;
+      razorpayError = e.message;
     }
   }
 
@@ -70,9 +99,9 @@ export async function loader({ params, request }: DataFunctionArgs) {
   }
   return json({
     eligiblePaymentMethods,
-    stripePaymentIntent,
-    stripePublishableKey,
-    stripeError,
+    razorpayOrderId,
+    razorpayKeyId,
+    razorpayError,
     brainTreeKey,
     brainTreeError,
     error,
@@ -83,6 +112,7 @@ export async function action({ params, request }: DataFunctionArgs) {
   const body = await request.formData();
   const paymentMethodCode = body.get('paymentMethodCode');
   const paymentNonce = body.get('paymentNonce');
+  const paymentMetadata = body.get('paymentMetadata');
   if (typeof paymentMethodCode === 'string') {
     const { nextOrderStates } = await getNextOrderStates({
       request,
@@ -100,8 +130,24 @@ export async function action({ params, request }: DataFunctionArgs) {
       }
     }
 
+    let metadata: any = {};
+    if (typeof paymentMetadata === 'string') {
+      const trimmed = paymentMetadata.trim();
+      if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+        try {
+          metadata = JSON.parse(trimmed);
+        } catch {
+          metadata = trimmed;
+        }
+      } else {
+        metadata = trimmed;
+      }
+    } else if (typeof paymentNonce === 'string') {
+      metadata = { nonce: paymentNonce };
+    }
+
     const result = await addPaymentToOrder(
-      { method: paymentMethodCode, metadata: { nonce: paymentNonce } },
+      { method: paymentMethodCode, metadata },
       { request },
     );
     if (result.addPaymentToOrder.__typename === 'Order') {
@@ -120,9 +166,9 @@ export async function action({ params, request }: DataFunctionArgs) {
 export default function CheckoutPayment() {
   const {
     eligiblePaymentMethods,
-    stripePaymentIntent,
-    stripePublishableKey,
-    stripeError,
+    razorpayOrderId,
+    razorpayKeyId,
+    razorpayError,
     brainTreeKey,
     brainTreeError,
     error,
@@ -155,21 +201,34 @@ export default function CheckoutPayment() {
               />
             )}
           </div>
-        ) : paymentMethod.code.includes('stripe') ? (
+        ) : paymentMethod.code.includes('razorpay') ? (
           <div className="py-12" key={paymentMethod.id}>
-            {stripeError ? (
+            {razorpayError ? (
               <div>
                 <p className="text-red-700 font-bold">
-                  {t('checkout.stripeError')}
+                  {t('checkout.razorpayError')}
                 </p>
-                <p className="text-sm">{stripeError}</p>
+                <p className="text-sm">{razorpayError}</p>
               </div>
             ) : (
-              <StripePayments
+              <RazorpayPayments
                 orderCode={activeOrder?.code ?? ''}
-                clientSecret={stripePaymentIntent!}
-                publishableKey={stripePublishableKey!}
-              ></StripePayments>
+                razorpayOrderId={razorpayOrderId!}
+                keyId={razorpayKeyId!}
+                amount={activeOrder?.totalWithTax ?? 0}
+                currencyCode={
+                  activeOrder?.currencyCode ?? ('INR' as CurrencyCode)
+                }
+                customerName={
+                  activeOrder?.customer
+                    ? `${activeOrder.customer.firstName ?? ''} ${activeOrder.customer.lastName ?? ''}`.trim()
+                    : undefined
+                }
+                customerEmail={activeOrder?.customer?.emailAddress ?? undefined}
+                customerContact={
+                  activeOrder?.shippingAddress?.phoneNumber ?? undefined
+                }
+              ></RazorpayPayments>
             )}
           </div>
         ) : (

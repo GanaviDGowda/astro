@@ -121,7 +121,7 @@
     "orderProcessing": "Please wait while we process your order...",
     "orderSuccessMessage": "Your order has been received!",
     "braintreeError": "Braintree error:",
-    "stripeError": "Stripe error:",
+    "razorpayError": "Razorpay error:",
     "detailsTitle": "Contact information",
     "shippingTitle": "Shipping information",
     "goToPayment": "Proceed to payment",

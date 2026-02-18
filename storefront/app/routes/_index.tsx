@@ -189,7 +189,7 @@ export default function Index() {
             className="absolute right-0 top-0 h-full w-[58%] object-cover opacity-20 mix-blend-multiply"
           />
         ) : null}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_68%_40%,rgba(247,121,29,0.26),transparent_48%)]" />
+        <div className="absolute inset-0 bg-hero-spotlight" />
 
         <div className="relative max-w-[1280px] mx-auto px-6 min-h-[420px] lg:min-h-[500px] py-12 lg:py-16 flex items-end">
           <div className="w-full grid lg:grid-cols-[360px_1fr] gap-10 items-end">

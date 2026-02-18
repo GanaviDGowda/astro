@@ -121,7 +121,7 @@
     "orderProcessing": "Aguarde enquanto processamos seu pedido...",
     "orderSuccessMessage": "Seu pedido foi recebido!",
     "braintreeError": "Erro cerebral:",
-    "stripeError": "Erro de faixa:",
+    "razorpayError": "Erro do Razorpay:",
     "detailsTitle": "Informações de contato",
     "shippingTitle": "Informação de envio",
     "goToPayment": "Prossiga para o pagamento",
